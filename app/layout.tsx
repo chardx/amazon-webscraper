@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import "@/styles/globals.css";
 export const metadata = {
@@ -23,7 +24,7 @@ export default function RootLayout({
           className="p-10 max-w-7xl w-full
         mx-auto overflow-y-auto"
         >
-          {/* Header */}
+          <Header />
           {children}
         </main>
       </body>
