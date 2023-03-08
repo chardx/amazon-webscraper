@@ -1,7 +1,9 @@
 import { NextApiRequest } from "next";
 
-export async function POST(req: NextApiRequest) {
-  const search = req.body.search;
+export async function POST(req: Request) {
+  console.log("Submitting ...");
+  // const search = req.body.search;
+  // console.log("SEARCH IS >> ", search);
 }
 
 // export async function GET(req: Request) {
