@@ -12,6 +12,7 @@ const SidebarRow = ({ doc }: Props) => {
   const [active, setActive] = useState(false);
   const pathname = usePathname();
 
+  // handle update of search
   useEffect(() => {
     if (!pathname) return;
     setActive(pathname.includes(doc.id));
