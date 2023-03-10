@@ -1,6 +1,15 @@
+"use client";
+import { db } from "../firebase";
 import { DocumentMagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
+import { collection, query, orderBy } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
+import SidebarRow from "./SidebarRow";
+
 const Sidebar = () => {
+  const [snapshot, loading, error] = useCollection(
+    query(collection(db, "searches"), orderBy("start_eta", "desc"))
+  );
   return (
     <div
       className="p-2 md:p-10 py-6 overflow-y-auto
@@ -25,7 +34,10 @@ const Sidebar = () => {
           Scraping the Unscrapable
         </h2>
       </div>
-      <ul>
+      <ul className="flex flex-col gap-2 py-2 overflow-x-auto">
+        {snapshot?.docs.map((doc) => (
+          <SidebarRow key={doc.id} doc={doc} />
+        ))}
         {/* SidebarRow */}
         {/* SidebarRow */}
         {/* SidebarRow */}

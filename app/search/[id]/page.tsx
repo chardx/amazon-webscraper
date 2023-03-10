@@ -1,9 +1,10 @@
 "use client";
 import Results from "../../../components/Results";
-import { doc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../../firebase";
-
+import Spinner from "react-spinkit";
+import { useRouter } from "next/navigation";
 type Props = {
   params: {
     id: string;
@@ -12,7 +13,21 @@ type Props = {
 
 const SearchPage = ({ params: { id } }: Props) => {
   const [snapshot, loading, error] = useDocument(doc(db, "searches", id));
+  const router = useRouter();
 
+  const handleDelete = () => {
+    deleteDoc(doc(db, "searches", id));
+    router.push("/");
+  };
+
+  const deleteButton = (
+    <button
+      className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+      onClick={handleDelete}
+    >
+      Delete Search
+    </button>
+  );
   if (loading)
     return (
       <h1 className="text-center p-10 animate-pulse text-xl text-indigo-600/500">
@@ -27,10 +42,18 @@ const SearchPage = ({ params: { id } }: Props) => {
         <p className="text-indigo-600 animate-pulse text-center">
           Scraping results from Amazon...
         </p>
+
+        <Spinner
+          style={{ height: "100px", width: "100px" }}
+          name="cube-grid"
+          fadeIn="none"
+          color="indigo"
+        />
+        {deleteButton}
       </div>
     );
   return (
-    <div>
+    <div className="py-5">
       <div className="flex items-center justify-between mb-7">
         <div className="flex flex-col md:flex-row gap-x-4">
           <h1 className="font-bold">
@@ -42,6 +65,7 @@ const SearchPage = ({ params: { id } }: Props) => {
               `${snapshot.data()?.results?.length} results found`}
           </p>
         </div>
+        {deleteButton}
       </div>
 
       {snapshot.data()?.results?.length > 0 && (
