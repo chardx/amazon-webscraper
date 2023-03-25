@@ -1,7 +1,12 @@
 import * as admin from "firebase-admin";
 import { getApps } from "firebase-admin/app";
 
-const serviceAccount = require("./serviceAccountKey.json");
+//Alternative to using the serviceAccountKey.json file
+//solution found here:
+//https://dev.to/vvo/how-to-add-firebase-service-account-json-files-to-vercel-ph5
+const serviceAccount = JSON.parse(
+  process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string
+);
 
 if (!getApps().length) {
   admin.initializeApp({
