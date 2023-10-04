@@ -1,6 +1,7 @@
 import ClientProvider from "../components/ClientProvider";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+
 import "@/styles/globals.css";
 export const metadata = {
   title: "Amazon Web Scraper",
