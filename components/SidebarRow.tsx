@@ -2,21 +2,14 @@
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { DocumentData } from "firebase/firestore";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import Spinner from "react-spinkit";
+import Spinner from "./Spinner";
 type Props = {
   doc: DocumentData;
 };
 const SidebarRow = ({ doc }: Props) => {
   const router = useRouter();
-  const [active, setActive] = useState(false);
   const pathname = usePathname();
-
-  // handle update of search
-  useEffect(() => {
-    if (!pathname) return;
-    setActive(pathname.includes(doc.id));
-  }, [pathname, doc]);
+  const active = pathname?.includes(doc.id) ?? false;
 
   return (
     <li
@@ -32,7 +25,7 @@ const SidebarRow = ({ doc }: Props) => {
       </div>
       <span className="ml-2 -order-2 md:order-1">
         {doc.data().status === "pending" ? (
-          <Spinner name="cube-grid" fadeIn="none" color="indigo" />
+          <Spinner />
         ) : (
           <CheckCircleIcon className="h-6 w-6 text-green-500" />
         )}

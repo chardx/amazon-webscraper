@@ -3,16 +3,18 @@ import Results from "../../../components/Results";
 import { deleteDoc, doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../../firebase";
-import Spinner from "react-spinkit";
+import Spinner from "../../../components/Spinner";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, use } from "react";
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
-const SearchPage = ({ params: { id } }: Props) => {
+const SearchPage = ({ params }: Props) => {
+  const { id } = use(params);
+
   const [snapshot, loading, error] = useDocument(doc(db, "searches", id));
   const router = useRouter();
   const status = snapshot?.data()?.status as string | undefined;
@@ -98,12 +100,7 @@ const SearchPage = ({ params: { id } }: Props) => {
           Scraping results from Amazon...
         </p>
 
-        <Spinner
-          style={{ height: "100px", width: "100px" }}
-          name="cube-grid"
-          fadeIn="none"
-          color="indigo"
-        />
+        <Spinner className="h-24 w-24" />
         {deleteButton}
       </div>
     );

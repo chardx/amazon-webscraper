@@ -11,13 +11,12 @@ const Header = () => {
   const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const input = inputRef.current?.value;
-    if (!input) return;
+    const field = inputRef.current;
+    const input = field?.value;
+    if (!field || !input) return;
 
     const notification = toast.loading(`Starting a Scraper for: ${input}`);
-    if (input) {
-      inputRef.current.value = "";
-    }
+    field.value = "";
     try {
       const response = await fetch("/api/activateScraper", {
         method: "POST",
