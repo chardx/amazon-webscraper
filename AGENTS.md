@@ -11,7 +11,14 @@ Do this for every completed change, including small fixes. Do not leave finished
 
 - Review `git status` and `git diff` before committing.
 - Stage only the files that belong to the change.
-- Write a short commit message that explains why the change was made.
+- Start every commit message with one action prefix, then a short explanation of why:
+  - `add:` a new feature or file
+  - `fix:` a bug
+  - `update:` a change to existing behavior or instructions
+  - `refactor:` a restructure that keeps the same behavior
+  - `docs:` documentation only
+  - `chore:` tooling, config, or dependencies
+- Example: `fix: save Bright Data results so the search page can render them`
 - Push with `git push` to the tracked remote branch. Use `git push -u origin HEAD` only when the branch has no upstream yet.
 - If the push is rejected, pull or rebase safely, then push again. Do not force-push unless the user explicitly asks.
 
@@ -22,3 +29,14 @@ Do this for every completed change, including small fixes. Do not leave finished
 - `node_modules`, `.next`, and other generated output
 
 If a change only touches secrets, do not commit those files. Tell the user they were left untracked.
+
+## Explain the change
+
+The user is learning Next.js. After each code change, end the reply with a short lesson about that change. Cover:
+
+- Which libraries were involved, and what each one is for
+- What changed in the app, in plain language
+- The Next.js idea behind it, such as the App Router, a client component, or an API route
+- What to look at next if they want to understand this part of the framework
+
+Keep the lesson tied to the files just edited. Do not turn it into a general Next.js tutorial.
