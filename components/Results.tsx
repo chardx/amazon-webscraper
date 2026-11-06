@@ -7,23 +7,26 @@ type Props = {
 const Results = ({ results }: Props) => {
   return (
     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 w-full">
-      {results.map((result) => (
+      {results.map((result, index) => (
         <Link
-          href={result.url}
-          key={result.title}
+          href={result.url || "#"}
+          key={result.url || `${result.title}-${index}`}
           className="flex flex-col space-x-4 w-full bg-white
             rounded-lg shadow-md p-5"
         >
           <img
+            src={result.image}
             srcSet={result.imageset}
             alt={result.title}
             className="object-contain w-full h-40 py-5"
           />
           <div className="flex flex-col py-5 flex-1">
             <p className="font-bold">{result.title}</p>
-            <p className="text-sm text-gray-500">
-              {result.rating} ({result.reviews} reviews)
-            </p>
+            {(result.rating || result.reviews > 0) && (
+              <p className="text-sm text-gray-500">
+                {result.rating} ({result.reviews} reviews)
+              </p>
+            )}
           </div>
 
           <div className="flex space-x-2 justify-end flex-1">
@@ -41,7 +44,7 @@ const Results = ({ results }: Props) => {
             )}
           </div>
           <div className="flex flex-wrap gap-2 justify-end mt-5">
-            {result.features.map(
+            {(result.features ?? []).map(
               (feature) =>
                 feature && (
                   <p

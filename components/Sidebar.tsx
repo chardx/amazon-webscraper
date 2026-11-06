@@ -34,6 +34,11 @@ const Sidebar = () => {
           Scraping the Unscrapable
         </h2>
       </div>
+      {error && (
+        <p className="px-2 text-xs text-red-500">
+          Couldn&apos;t load searches. {error.message}
+        </p>
+      )}
       <ul className="flex flex-col gap-2 py-2 overflow-x-auto">
         {snapshot?.docs.map((doc) => (
           <SidebarRow key={doc.id} doc={doc} />

@@ -5,6 +5,7 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../../../firebase";
 import Spinner from "react-spinkit";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 type Props = {
   params: {
     id: string;
@@ -14,6 +15,37 @@ type Props = {
 const SearchPage = ({ params: { id } }: Props) => {
   const [snapshot, loading, error] = useDocument(doc(db, "searches", id));
   const router = useRouter();
+  const status = snapshot?.data()?.status as string | undefined;
+
+  useEffect(() => {
+    if (!id || (status && status !== "pending")) return;
+
+    let stopped = false;
+
+    const syncResults = async () => {
+      if (stopped) return;
+
+      try {
+        await fetch("/api/syncResults", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        });
+      } catch {
+        // Bright Data may still be scraping. The next poll retries.
+      }
+    };
+
+    syncResults();
+    const timer = window.setInterval(syncResults, 10000);
+
+    return () => {
+      stopped = true;
+      window.clearInterval(timer);
+    };
+  }, [id, status]);
 
   const handleDelete = () => {
     deleteDoc(doc(db, "searches", id));
@@ -35,7 +67,30 @@ const SearchPage = ({ params: { id } }: Props) => {
       </h1>
     );
 
-  if (!snapshot?.exists()) return;
+  if (error)
+    return (
+      <p className="text-center p-10 text-red-500">
+        Couldn&apos;t load this search. {error.message}
+      </p>
+    );
+
+  if (!snapshot?.exists())
+    return (
+      <p className="text-center p-10 text-gray-500">
+        This search no longer exists.
+      </p>
+    );
+
+  if (snapshot.data()?.status === "error")
+    return (
+      <div className="flex flex-col gap-y-5 py-10 items-center justify-between">
+        <p className="text-center text-red-500">
+          {snapshot.data()?.error || "The scraper could not return results."}
+        </p>
+        {deleteButton}
+      </div>
+    );
+
   if (snapshot.data()?.status === "pending")
     return (
       <div className="flex flex-col gap-y-5 py-10 items-center justify-between">
@@ -63,15 +118,16 @@ const SearchPage = ({ params: { id } }: Props) => {
             }"`}</span>
           </h1>
           <p className="text-gray-300">
-            {snapshot.data()?.results?.length > 0 &&
-              `${snapshot.data()?.results?.length} results found`}
+            {`${snapshot.data()?.results?.length || 0} results found`}
           </p>
         </div>
         {deleteButton}
       </div>
 
-      {snapshot.data()?.results?.length > 0 && (
+      {snapshot.data()?.results?.length > 0 ? (
         <Results results={snapshot.data()?.results} />
+      ) : (
+        <p className="text-gray-500">No products were returned for this search.</p>
       )}
     </div>
   );
