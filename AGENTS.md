@@ -32,11 +32,12 @@ If a change only touches secrets, do not commit those files. Tell the user they 
 
 ## Explain the change
 
-The user is learning Next.js. After each code change, end the reply with a short lesson about that change. Cover:
+The user is learning Next.js and already knows React with Vite. After each code change, end the reply with a short lesson about that change. Cover:
 
 - Which libraries were involved, and what each one is for
 - What changed in the app, in plain language
 - The Next.js idea behind it, such as the App Router, a client component, or an API route
+- The Vite equivalent, when there is one: React Router, a client-only component, `import.meta.env`, or a separate API server
 - What to look at next if they want to understand this part of the framework
 
-Keep the lesson tied to the files just edited. Do not turn it into a general Next.js tutorial.
+Keep the lesson tied to the files just edited. Do not turn it into a general Next.js tutorial. Assume React itself is familiar. Explain only the Next.js parts that Vite does not have.
